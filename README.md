@@ -6,7 +6,7 @@ Use this simple PHP script with a cronjob to dynamically update your DNS records
 ssh to your home server and make sure deps are installed, such as `php php-curl`.
 
 ```
-# git clone https://github.com/shoaloak/DirectAdmin-DDNS /opt/dyndns
+# git clone https://github.com/brechtwyns/DirectAdmin-DDNS /opt/dyndns
 # vi /opt/dyndns/credentials.json
 # cat /opt/dyndns/credentials.json
 {
