@@ -11,7 +11,6 @@ $server_login = $credentials['username'];
 $server_pass = $credentials['password'];
 $server_host = $credentials['hostname'];
 $domain = $credentials['domain'];
-$type = $credentials['type'];
 $ArecordName = $credentials['ArecordName'];
 
 $storage = "ddns.dat";
