@@ -11,7 +11,8 @@ $server_login = $credentials['username'];
 $server_pass = $credentials['password'];
 $server_host = $credentials['hostname'];
 $domain = $credentials['domain'];
-$subdomain = $credentials['subdomain'];
+$type = $credentials['type'];
+$ArecordName = $credentials['ArecordName'];
 
 $storage = "ddns.dat";
 $server_port = 2222;
@@ -28,16 +29,18 @@ curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
 
 $publicip = curl_exec($ch);
 
-echo ("Public IPV4: " . $publicip . "\n");
+echo ("New IPV4: " . $publicip . "\r\n");
 
 curl_close($ch);
 
 $data = file_exists($storage) ? json_decode(file_get_contents($storage), true) : False;
+echo ("Previous IPV4 is: " . $data["publicip"] . "\r\n");
+$arecs = htmlentities("name=".$ArecordName."&value=".$data["publicip"]);
 
 if ($data["publicip"] === $publicip) {
-    echo ("Public IP has not changed, no update needed.\n");
+    echo ("Public IP has not changed, no update needed.\r\n");
 } else {
-    echo ("Public IP has changed, updating DNS to $publicip...\n");
+    echo ("Public IP has changed, updating DNS to $publicip...\r\n");
 
     $sock = new HTTPSocket;
     if ($server_ssl == 'Y') {
@@ -53,14 +56,19 @@ if ($data["publicip"] === $publicip) {
         '/CMD_API_DNS_CONTROL',
         array(
             'domain' => $domain,
-            'action' => 'add',
-            'type' => 'A',
-            'name' => $subdomain . '.',
-            'value'    => $publicip,
+            'action'=> 'edit',
+            'type' => $type,
+            'arecs0'=> $arecs,
+            'name' => $ArecordName,
+            'value' => $publicip,
         )
     );
+    
 
     $result = $sock->fetch_parsed_body();
+    echo ("Result: \r\n <pre>"); 
+    print_r($result); 
+    echo "</pre>";
 
     $data = array();
     $data["publicip"] = $publicip;
